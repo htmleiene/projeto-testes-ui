@@ -9,10 +9,10 @@ Este repositório contém um projeto de testes de usabilidade para interfaces we
 - 🌐 Dashboard para visualização dos resultados
 
 ## 🏗️ Estrutura do Projeto
-📂 `tests/` → Scripts de automação dos testes
-📂 `reports/` → Relatórios gerados automaticamente
-📂 `dashboard/` → Interface de visualização dos testes
-📂 `backend/` → Processamento dos testes e geração de métricas
+📂 data/ → resultados.json
+📂 static/ → estilo css e js
+📂 templates/ → html
+📂 app.py
 
 ## 🛠️ Tecnologias Utilizadas
 - 🐍 Python
