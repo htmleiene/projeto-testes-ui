@@ -9,10 +9,11 @@ Este repositório contém um projeto de testes de usabilidade para interfaces we
 - 🌐 Dashboard para visualização dos resultados
 
 ## 🏗️ Estrutura do Projeto
-- 📂 data/ → resultados.json
-- 📂 static/ → estilo css e js
-- 📂 templates/ → html
-- 📂 app.py
+- 📂 data/ → Armazena os resultados dos testes (resultados.json)
+- 📂 static/ → Contém arquivos de estilo CSS e scripts JavaScript
+- 📂 templates/ → Modelos HTML para a interface
+- 📂 app.py → Código principal da aplicação Flask
+
 
 ## 🛠️ Tecnologias Utilizadas
 - 🐍 Python
