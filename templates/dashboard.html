@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Usabilidade</title>
+    
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            padding: 20px;
+            background: #DED9E2; /* Fundo claro */
+            font-family: 'Poppins', sans-serif;
+            color: #2B4141; /* Texto escuro */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(43, 65, 65, 0.1); /* Sombra suave */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2B4141; /* Azul escuro */
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .grafico-container {
+            display: flex;
+            justify-content: center; /* Centraliza horizontalmente */
+            align-items: center; /* Centraliza verticalmente */
+            margin-bottom: 20px;
+        }
+
+        canvas {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 5px 15px rgba(43, 65, 65, 0.1); /* Sombra suave */
+            max-width: 100%; /* Garante que o gráfico não ultrapasse o contêiner */
+            height: auto; /* Mantém a proporção */
+        }
+
+        .table {
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .table thead {
+            background: linear-gradient(135deg, #0EB1D2, #34E4EA); /* Gradiente azul */
+            color: white;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(14, 177, 210, 0.05); /* Azul médio claro */
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(14, 177, 210, 0.1); /* Azul médio claro */
+        }
+
+        .table td {
+            max-width: 200px; /* Limita o tamanho da célula */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Adiciona "..." ao texto truncado */
+            white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+        }
+
+        .table td:hover {
+            overflow: visible;
+            white-space: normal; /* Mostra o texto completo ao passar o mouse */
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0EB1D2, #34E4EA); /* Gradiente azul */
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #34E4EA, #0EB1D2); /* Gradiente invertido */
+            transform: translateY(-2px);
+        }
+ 
+        /* From Uiverse.io by Jedi-hongbin */ 
+        .button-back {
+        display: flex;
+        height: 3em;
+        width: 100px;
+        align-items: center;
+        justify-content: center;
+        background-color: #eeeeee4b;
+        border-radius: 10px;
+        letter-spacing: 1px;
+        transition: all 0.2s linear;
+        cursor: pointer;
+        border: none;
+        background: #fff;
+        }
+
+        button-back > svg {
+        margin-right: 5px;
+        margin-left: 5px;
+        font-size: 20px;
+        transition: all 0.4s ease-in;
+        }
+
+        button-back:hover > svg {
+        font-size: 1.2em;
+        transform: translateX(-5px);
+        }
+
+        button-back:hover {
+        box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+        transform: translateY(-2px);
+        }
+
+    </style>
+</head>
+<body>
+    <button class="button-back" onclick="window.location.href='/'">
+        <svg height="16" width="16" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 1024 1024"><path d="M874.690416 495.52477c0 11.2973-9.168824 20.466124-20.466124 20.466124l-604.773963 0 188.083679 188.083679c7.992021 7.992021 7.992021 20.947078 0 28.939099-4.001127 3.990894-9.240455 5.996574-14.46955 5.996574-5.239328 0-10.478655-1.995447-14.479783-5.996574l-223.00912-223.00912c-3.837398-3.837398-5.996574-9.046027-5.996574-14.46955 0-5.433756 2.159176-10.632151 5.996574-14.46955l223.019353-223.029586c7.992021-7.992021 20.957311-7.992021 28.949332 0 7.992021 8.002254 7.992021 20.957311 0 28.949332l-188.073446 188.073446 604.753497 0C865.521592 475.058646 874.690416 484.217237 874.690416 495.52477z"></path></svg>
+        <span>Voltar</span>
+      </button>     
+    <div class="container">
+        <h2 class="text-center mb-4">Relatórios de Testes de Usabilidade</h2>
+
+        <!-- Contêiner do Gráfico -->
+        <div class="grafico-container">
+            <canvas id="grafico"></canvas>
+        </div>
+
+        <!-- Tabela de Dados -->
+        <h3 class="mt-4">Resultados Detalhados</h3>
+        <table class="table table-striped table-hover mt-3">
+            <thead class="table-dark">
+                <tr>
+                    <th>Teste</th> <!-- Cabeçalho da nova coluna -->
+                    <th>URL</th>
+                    <th>Tempo de Resposta (s)</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaDados"></tbody>
+        </table>
+
+        <!-- Botão de Exportação -->
+        <button class="btn btn-primary mt-3" onclick="exportarCSV()">Exportar CSV</button>
+    </div>
+
+    <script>
+        fetch('/dados')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('grafico').getContext('2d');
+    
+            const labels = data.map((_, index) => `Teste ${index + 1}`); // Labels genéricas
+            const tempos = data.map(d => d.tempo_resposta);
+            const status = data.map(d => d.status === "sucesso" ? "✅" : "❌");
+    
+            // Gradiente para as barras
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, '#0EB1D2'); /* Azul médio */
+            gradient.addColorStop(1, '#34E4EA'); /* Azul claro */
+    
+            // Criar gráfico de barras
+            new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tempo de Resposta (s)', // Nome do dataset
+                    data: tempos,
+                    backgroundColor: gradient, /* Gradiente aplicado */
+                    borderColor: '#0EB1D2', /* Azul médio */
+                    borderWidth: 1,
+                    borderRadius: 5, /* Bordas arredondadas nas barras */
+                    hoverBackgroundColor: '#34E4EA', /* Azul claro ao passar o mouse */
+                }]
+            },
+            options: {
+                responsive: true,
+                animation: {
+                    duration: 1000, /* Duração da animação */
+                    easing: 'easeInOutQuart', /* Efeito de animação suave */
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            color: '#2B4141', /* Azul escuro */
+                            font: {
+                                size: 14,
+                                family: 'Poppins',
+                            },
+                            generateLabels: (chart) => {
+                                // Personaliza as labels da legenda
+                                return [{
+                                    text: 'Testes de Usabilidade', // Texto fixo
+                                    fillStyle: gradient, // Cor do ícone
+                                    hidden: false, // Sempre visível
+                                    lineWidth: 0, // Remove a borda
+                                }];
+                            }
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: '#2B4141', /* Azul escuro */
+                        titleColor: '#DED9E2', /* Cinza claro */
+                        bodyColor: '#DED9E2', /* Cinza claro */
+                        borderColor: '#0EB1D2', /* Azul médio */
+                        borderWidth: 1,
+                        padding: 10,
+                        cornerRadius: 5,
+                        callbacks: {
+                            title: (context) => {
+                                // Exibe o índice do teste no tooltip
+                                return `Teste ${context[0].dataIndex + 1}`;
+                            },
+                            label: (context) => {
+                                // Exibe o tempo de resposta no tooltip
+                                return `Tempo: ${context.raw}s`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            display: false, /* Remove linhas de grade do eixo X */
+                        },
+                        ticks: {
+                            color: '#2B4141', /* Azul escuro */
+                            font: {
+                                size: 12,
+                                family: 'Poppins',
+                            }
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: '#DED9E2', /* Cinza claro para linhas de grade */
+                            borderDash: [5, 5], /* Linhas tracejadas */
+                        },
+                        ticks: {
+                            color: '#2B4141', /* Azul escuro */
+                            font: {
+                                size: 12,
+                                family: 'Poppins',
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    
+            // Preencher a tabela
+            let tabelaHTML = "";
+            data.forEach((d, index) => {
+                tabelaHTML += `<tr>
+                    <td>Teste ${index + 1}</td> <!-- Numeração do teste -->
+                    <td title="${d.url}">${d.url}</td> <!-- Tooltip com o texto completo -->
+                    <td>${d.tempo_resposta ?? '-'}</td>
+                    <td>${status[index]}</td>
+                </tr>`;
+            });
+            document.getElementById("tabelaDados").innerHTML = tabelaHTML;
+        });
+    
+        // Função para exportar dados em CSV
+        function exportarCSV() {
+            fetch('/dados')
+            .then(response => response.json())
+            .then(data => {
+                let csvContent = "data:text/csv;charset=utf-8,Teste,URL,Tempo de Resposta,Status\n";
+                data.forEach((d, index) => {
+                    csvContent += `Teste ${index + 1},${d.url},${d.tempo_resposta ?? '-'},${d.status}\n`;
+                });
+    
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "resultados_usabilidade.csv");
+                document.body.appendChild(link);
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

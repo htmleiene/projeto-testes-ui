@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testes de Usabilidade</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            padding: 20px;
+            background: #DED9E2; /* Fundo claro */
+            font-family: 'Poppins', sans-serif;
+            color: #2B4141; /* Texto escuro */
+        }
+
+        .container {
+            max-width: 600px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(43, 65, 65, 0.1); /* Sombra suave */
+            margin: auto;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #2B4141; /* Azul escuro */
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 1em;
+            border: 1px solid #C0B9DD; /* Roxo claro */
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            border-color: #0EB1D2; /* Azul médio */
+            box-shadow: 0 0 5px rgba(14, 177, 210, 0.5);
+        }
+
+        .btn-primary {
+            width: 100%;
+            font-weight: 500;
+            background: linear-gradient(135deg, #0EB1D2, #34E4EA); /* Gradiente azul */
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #34E4EA, #0EB1D2); /* Gradiente invertido */
+            transform: translateY(-2px);
+        }
+
+        .btn-outline-secondary {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #C0B9DD; /* Roxo claro */
+            color: #2B4141; /* Azul escuro */
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .btn-outline-secondary:hover {
+            background: #C0B9DD; /* Roxo claro */
+            color: white;
+        }
+
+        #resultado {
+            margin-top: 15px;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .spinner-border {
+            display: none;
+            margin-top: 10px;
+            width: 2rem;
+            height: 2rem;
+            color: #0EB1D2; /* Azul médio */
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center">
+        <h2>Teste de Usabilidade</h2>
+
+        <input type="text" id="url" class="form-control" placeholder="Digite a URL para testar">
+        <button class="btn btn-primary mt-3" onclick="executarTeste()">Iniciar Teste</button>
+
+        <div class="spinner-border" role="status" id="loading">
+            <span class="visually-hidden">Carregando...</span>
+        </div>
+
+        <p id="resultado" class="mt-3"></p>
+
+        <a href="/dashboard" class="btn btn-outline-secondary mt-3">Ver Relatórios</a>
+    </div>
+
+    <script>
+        function executarTeste() {
+            var url = document.getElementById("url").value;
+            var resultado = document.getElementById("resultado");
+            var loading = document.getElementById("loading");
+
+            if (!url) {
+                resultado.innerText = "Por favor, insira uma URL.";
+                resultado.style.color = "#2B4141"; /* Azul escuro */
+                return;
+            }
+
+            resultado.innerText = "";
+            loading.style.display = "inline-block";
+
+            fetch('/testar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ "url": url })
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = "none";
+                if (data.status === "sucesso") {
+                    resultado.innerHTML = `✅ Teste concluído! Tempo: <b>${data.tempo_resposta}s</b>`;
+                    resultado.style.color = "#0EB1D2"; /* Azul médio */
+                } else {
+                    resultado.innerHTML = "❌ Erro ao executar o teste.";
+                    resultado.style.color = "#C0B9DD"; /* Roxo claro */
+                }
+            })
+            .catch(error => {
+                loading.style.display = "none";
+                resultado.innerHTML = "❌ Erro ao conectar ao servidor.";
+                resultado.style.color = "#C0B9DD"; /* Roxo claro */
+            });
+        }
+    </script>
+</body>
+</html>

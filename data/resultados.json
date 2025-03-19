@@ -1,0 +1,42 @@
+[
+    {
+        "url": "https://drive.google.com/file/d/1Qcj1PZbbOyo4Ux-ukuW47J-jwQH0ISVc/view?usp=sharing",
+        "tempo_resposta": null,
+        "status": "erro"
+    },
+    {
+        "url": "https://drive.google.com/file/d/1Qcj1PZbbOyo4Ux-ukuW47J-jwQH0ISVc/view?usp=sharing",
+        "tempo_resposta": 1.29,
+        "status": "sucesso"
+    },
+    {
+        "url": "https://www.google.com",
+        "tempo_resposta": 0.94,
+        "status": "sucesso"
+    },
+    {
+        "url": "https://www.wikipedia.org",
+        "tempo_resposta": 0.12,
+        "status": "sucesso"
+    },
+    {
+        "url": "https://www.github.com",
+        "tempo_resposta": 2.15,
+        "status": "sucesso"
+    },
+    {
+        "url": "https://www.github.com",
+        "tempo_resposta": 2.5,
+        "status": "sucesso"
+    },
+    {
+        "url": "https://www.openai.com",
+        "tempo_resposta": 0.2,
+        "status": "sucesso"
+    },
+    {
+        "url": "https://www.bbc.com",
+        "tempo_resposta": 1.14,
+        "status": "sucesso"
+    }
+]
